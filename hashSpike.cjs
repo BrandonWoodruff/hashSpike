@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const samplePws = require('./mcupws.json')
+const mcupws = require('./mcupws.json')
 
 const alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -29,6 +29,16 @@ function* pwsUpToLenN(n) {
   for (let i = 1; i <= n; i++) {
     yield* pwsOfLenN(i)
   }
+}
+
+function* allClearTextPws() {
+  yield ''
+  yield* mcupws.slice(0, 100)
+  yield* pwsUpToLenN(1)
+  yield* mcupws.slice(100, 900)
+  yield* pwsUpToLenN(2)
+  yield* mcupws.slice(900)
+  yield* pwsUpToLenN(3)
 }
 
 function main() {
