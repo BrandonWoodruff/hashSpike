@@ -37,7 +37,7 @@ function* allClearTextPws() {
 
 function main() {
     hashes = _.takeRight(hashes, 50_000)
-    const bar = new ProgressBar('[:bar] :percent :etas', { total: hashes.length })
+    const bar = new ProgressBar('[:bar] :percent :etas', { total: 100 })
     var timer = setInterval(function () {
         bar.tick()
         if (bar.complete) {
@@ -45,18 +45,25 @@ function main() {
         }
     }, 100)
 
+    i = 0
+
     console.time('Cracking hashes')
     for (let hash of hashes) {
+        i++
+        if (i % 500 === 0) {
+            // console.log('Cracked', i, 'hashes')
+            bar.tick(1)
+        }
         for (let pw of allClearTextPws()) {
             if (bcrypt.compareSync(pw, hash)) {
                 // console.log('Match found:', pw, hash)
                 if (pw === '') {
-                    fs.appendFileSync('hashes.answers.txt', `${hash} ${' '}\n`)
+                    fs.appendFileSync('hashes.answers.txt', `${hash} ' ' \n`)
                     break
                 }
                 fs.appendFileSync('hashes.answers.txt', `${hash} ${pw}\n`)
                 break
-                
+
             }
         }
     }
